@@ -1,0 +1,1 @@
+export const url_zii = 'https://programarecetatenie.eu/status_zii';
