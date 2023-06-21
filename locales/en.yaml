@@ -1,0 +1,54 @@
+start: >
+  🖐 <b>Hello!</b>
+
+help: |
+  <b>This bot performs automatic registration of people under Article 11 Bucharest, for europass.com</b>
+
+  ➡️ <b>List of commands</b>:
+  <code>/NewRegList + [upload_document XLSX]</code> - set RegList
+  /removeRegList - remove RegList
+  /getRegList - get RegList
+
+  /help - see help
+
+help_owner: |
+  👑 <b>You are the bot owner</b>
+  💬 ${admin}
+
+help_admin: |
+  👷 <b>You are the bot admin</b>
+
+help_not_exist: >
+  🚫 Sorry, there is no help for your request
+
+forbidden: >
+  ⛔️ Forbidden for <code>${id}</code>
+
+error: |
+  ❗️ <b>Something went wrong.</b> 
+  <i>Contact your administrator</i>
+  💬 ${admin}
+
+no_document: >
+  🚫 There is no file in the message
+
+no_xlsx_document: >
+  🚫 There is no .xlsx file in the message
+
+storage_is_empty: >
+  🚫 There is no reglist in the storage
+
+reg_list_upload_success: >
+  ✅ NEW RegList uploaded successfully
+
+reg_list_removed_success: >
+  ✅ RegList removed successfully
+
+reg_list_was_exist__help: >
+  ✅ RegList is set
+
+reg_list_was_exist__get: >
+  ⬆️ Here is the currently RegList.
+
+reg_list_was_exist__upload: >
+  ‼️ There was already a document in the storage. Here it is.

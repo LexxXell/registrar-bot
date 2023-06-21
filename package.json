@@ -1,0 +1,21 @@
+{
+  "name": "registrar-bot",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "author": "LexxXell",
+  "license": "MIT",
+  "scripts": {
+    "dev": "yarn tsc && node dist/index.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "colors": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "telegraf": "3.39",
+    "telegraf-i18n": "^6.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "typescript": "^5.1.3"
+  }
+}
