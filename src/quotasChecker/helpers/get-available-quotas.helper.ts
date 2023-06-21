@@ -1,6 +1,7 @@
 import { FormularTypes } from '../@types';
 import { AziDate } from '../@types/azi-date.type';
 import { url_zii } from './constants.helper';
+import axios from 'axios';
 
 /**
  * @param tip_formular
@@ -11,8 +12,12 @@ export async function getAvailableQuotas(tip_formular: keyof typeof FormularType
   const formDataZii = new FormData();
   formDataZii.append('tip_formular', FormularTypes[tip_formular]);
   formDataZii.append('azi', date);
-  const response = await fetch(url_zii, { method: 'POST', body: formDataZii });
-  const quotas = await response.json();
-  const out = (await quotas) as { numar_ramase: number };
+  const reqBody = {
+    tip_formular: FormularTypes[tip_formular],
+    azi: date,
+  };
+  const response = axios.post(url_zii,reqBody, {responseType:'json'});
+  const quotas = await response;
+  const out = (await quotas.data) as { numar_ramase: number };
   return out.numar_ramase;
 }

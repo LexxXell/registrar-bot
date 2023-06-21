@@ -38,5 +38,8 @@ export async function getDateQuotas(formular: keyof typeof FormularTypes) {
     const quotas = await getAvailableQuotas(formular, date as AziDate);
     outData.set(date, quotas);
   }
+  console.log(outData);
   return outData;
 }
+
+getDateQuotas('ART11_BUCURESTI');

@@ -1,6 +1,6 @@
 import { FormularTypes } from '../@types';
 
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 export async function getAvailableDates(
   tip_formular: keyof typeof FormularTypes,
@@ -27,7 +27,7 @@ export async function getAvailableDates(
       break;
   }
   const url_zile = 'https://programarecetatenie.eu/status_zile';
-  let reqBody = {
+  const reqBody = {
     azi:
       currentDate.getFullYear() +
       '-' +
@@ -35,8 +35,8 @@ export async function getAvailableDates(
       (currentDate.getMonth() + 1),
     tip_formular: FormularTypes[tip_formular],
   };
-  const response = await fetch(url_zile, { method: 'POST', body: JSON.stringify(reqBody) });
-  const dates = ((await response.json()) as { data: string[] }).data;
+  const response = await axios.post(url_zile, reqBody,{responseType:'json'});
+  const dates = (response.data as { data: string[] }).data;
   const dateList = [];
   while (startDate <= endDate) {
     if (!excludedDays.includes(startDate.getDay())) {
