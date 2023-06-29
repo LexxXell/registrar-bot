@@ -1,8 +1,9 @@
 import { FormularTypes } from './@types';
-import { AziDate } from './@types/azi-date.type';
+import { DateQuotas } from './@types/date-quotas.type';
+import { ZiiDate } from './@types/zii-date.type';
 import { formatDate, getAvailableDates, getAvailableQuotas } from './helpers';
 
-export async function getDateQuotas(formular: keyof typeof FormularTypes) {
+export async function getDateQuotas(formular: keyof typeof FormularTypes): Promise<Array<DateQuotas>> {
   let availableDates: string[] = [];
   const currentDate = new Date();
   const firstMonth = await getAvailableDates(
@@ -33,13 +34,10 @@ export async function getDateQuotas(formular: keyof typeof FormularTypes) {
     new Date(new Date(currentDate).setMonth(currentDate.getMonth())),
   );
   availableDates = availableDates.concat(firstMonth).concat(secondMonth).concat(thirdMonth).concat(fourMonth);
-  var outData: Map<string, number> = new Map<string, number>();
+  var outData: Array<{ date: ZiiDate; quotas: number }> = [];
   for await (let date of availableDates) {
-    const quotas = await getAvailableQuotas(formular, date as AziDate);
-    outData.set(date, quotas);
+    const quotas = await getAvailableQuotas(formular, date as ZiiDate);
+    outData.push({ date: date as ZiiDate, quotas });
   }
-  console.log(outData);
   return outData;
 }
-
-getDateQuotas('ART11_BUCURESTI');

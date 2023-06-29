@@ -1,23 +1,26 @@
+import { Logger } from '../../helpers/logger.helper';
 import { FormularTypes } from '../@types';
-import { AziDate } from '../@types/azi-date.type';
+import { ZiiDate } from '../@types/zii-date.type';
 import { url_zii } from './constants.helper';
 import axios from 'axios';
 
+const logger = new Logger('getAvailableQuotas');
+
 /**
- * @param tip_formular
- * @param date ex. '2010-05'
- * @returns
+ * @param tip_formular FormularTypes
+ * @param date ex. '2010-05-20'
+ * @returns number
  */
-export async function getAvailableQuotas(tip_formular: keyof typeof FormularTypes, date: AziDate) {
-  const formDataZii = new FormData();
-  formDataZii.append('tip_formular', FormularTypes[tip_formular]);
-  formDataZii.append('azi', date);
-  const reqBody = {
-    tip_formular: FormularTypes[tip_formular],
-    azi: date,
-  };
-  const response = axios.post(url_zii,reqBody, {responseType:'json'});
-  const quotas = await response;
-  const out = (await quotas.data) as { numar_ramase: number };
-  return out.numar_ramase;
+export async function getAvailableQuotas(tip_formular: keyof typeof FormularTypes, date: ZiiDate): Promise<number> {
+  try {
+    const reqBody = {
+      tip_formular: FormularTypes[tip_formular],
+      azi: date,
+    };
+    const response = await axios.post(url_zii, reqBody, { responseType: 'json' });
+    return response.data?.numar_ramase || 0;
+  } catch (e) {
+    logger.error(e);
+    return 0;
+  }
 }

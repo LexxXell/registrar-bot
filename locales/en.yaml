@@ -38,6 +38,9 @@ no_xlsx_document: >
 storage_is_empty: >
   🚫 There is no reglist in the storage
 
+storage_is_empty__help: >
+  🚫  RegList NOT set
+
 reg_list_upload_success: >
   ✅ NEW RegList uploaded successfully
 
@@ -51,4 +54,20 @@ reg_list_was_exist__get: >
   ⬆️ Here is the currently RegList.
 
 reg_list_was_exist__upload: >
-  ‼️ There was already a document in the storage. Here it is.
+  There was already a document in the storage. Here it is.
+
+registration_is_open: |
+  ⚠️ ${formularType} registration is open for the following dates:
+
+  ⬇️ <i>(date - places)</i>
+  ${strDateQuotas}
+
+  ❗️ <b>The registration process from RegList is started.</b>
+
+registration_result: |
+  ⬆️ Reglist file with registration results.
+  See sheets <b>"Registered"</b> & <b>"NonRegistered"</b>
+
+registration_reglist_removed: |
+  ❗️ <b>Reglist has been removed from the storage.</b>
+  ⚠️ <i>To continue auto-registering, install a new reglist.</i>

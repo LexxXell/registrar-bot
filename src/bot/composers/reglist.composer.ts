@@ -6,6 +6,7 @@ import { createWriteStream, existsSync, unlink } from 'node:fs';
 import { Context } from '../@types';
 import { Logger } from '../../helpers/logger.helper';
 import { errorToUser } from '../helpers/error-to-user.helper';
+import { reglistPath } from '../../helpers/constants.helper';
 
 const logger = new Logger('RegList Composer');
 
@@ -16,7 +17,7 @@ reglistComposer.on('message', async (ctx: Context, next) => {
     return next();
   }
   if (ctx.message.document) {
-    if (ctx.message.document.file_name.slice(-5) !== '.xlsx') {
+    if (ctx.message.document.file_name.slice(-5) !== reglistPath.slice(-5)) {
       await ctx.replyWithHTML(ctx.i18n.t('no_xlsx_document'));
     }
     const fileId = ctx.message.document.file_id;
@@ -31,10 +32,13 @@ reglistComposer.on('message', async (ctx: Context, next) => {
         responseType: 'stream',
       });
 
-      const filePath = path.resolve('storage/reglist.xlsx');
+      const filePath = path.resolve(reglistPath);
 
       if (existsSync(filePath)) {
-        await ctx.replyWithDocument({ source: filePath }, { caption: ctx.i18n.t('reg_list_was_exist__upload') });
+        await ctx.replyWithDocument(
+          { source: filePath },
+          { caption: ctx.i18n.t('reg_list_was_exist__upload'), parse_mode: 'HTML' },
+        );
       }
       response.data.pipe(createWriteStream(filePath));
 
@@ -49,19 +53,27 @@ reglistComposer.on('message', async (ctx: Context, next) => {
 });
 
 reglistComposer.command('getRegList', async (ctx: Context) => {
-  const filePath = path.resolve('storage/reglist.xlsx');
+  const filePath = path.resolve(reglistPath);
   if (!existsSync(filePath)) {
     return await ctx.replyWithHTML(ctx.i18n.t('storage_is_empty'));
   }
-  await ctx.replyWithDocument({ source: filePath }, { caption: ctx.i18n.t('reg_list_was_exist__get') });
+  await ctx.replyWithDocument(
+    { source: filePath },
+    { caption: ctx.i18n.t('reg_list_was_exist__get'), parse_mode: 'HTML' },
+  );
 });
 
 reglistComposer.command('removeRegList', async (ctx: Context) => {
-  const filePath = path.resolve('storage/reglist.xlsx');
+  const filePath = path.resolve(reglistPath);
 
   if (!existsSync(filePath)) {
-    await ctx.replyWithHTML(ctx.i18n.t('storage_is_empty'));
+    return await ctx.replyWithHTML(ctx.i18n.t('storage_is_empty'));
   }
+
+  await ctx.replyWithDocument(
+    { source: filePath },
+    { caption: ctx.i18n.t('reg_list_was_exist__get'), parse_mode: 'HTML' },
+  );
 
   unlink(filePath, async (err) => {
     if (err) {

@@ -2,6 +2,7 @@ import { Composer } from 'telegraf';
 import { Context } from '../@types';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { reglistPath } from '../../helpers/constants.helper';
 
 export const startComposer: Composer<Context> = new Composer();
 
@@ -25,7 +26,7 @@ startComposer.hears(/^\/start$|^\/help$|^\/help[_\s]{1}(?<command>[^\s]+)$/, asy
     await ctx.replyWithHTML(ctx.i18n.t('help_admin', { admin: process.env.BOT_ADMIN_USERNAME || 'unspecified' }));
   }
 
-  if (existsSync(path.resolve('storage/reglist.xlsx'))) {
-    await ctx.replyWithHTML(ctx.i18n.t('reg_list_was_exist__help'));
-  }
+  await ctx.replyWithHTML(
+    ctx.i18n.t(existsSync(path.resolve(reglistPath)) ? 'reg_list_was_exist__help' : 'storage_is_empty__help'),
+  );
 });

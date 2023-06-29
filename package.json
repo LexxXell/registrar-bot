@@ -12,12 +12,16 @@
     "colors": "^1.4.0",
     "dotenv": "^16.3.1",
     "node-fetch": "2.6.9",
+    "puppeteer": "^20.7.3",
+    "puppeteer-extra": "^3.3.6",
     "telegraf": "3.39",
-    "telegraf-i18n": "^6.6.0"
+    "telegraf-i18n": "^6.6.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^20.3.1",
     "@types/node-fetch": "^2.6.4",
+    "@types/xlsx": "^0.0.36",
     "typescript": "^5.1.3"
   }
 }

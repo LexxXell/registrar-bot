@@ -28,10 +28,6 @@ bot.use(idGuard);
 bot.use(startComposer);
 bot.use(reglistComposer);
 
-bot.command('test', () => {
-  throw new Error('Test test test');
-});
-
 bot.catch((error: Error) => {
   logger.error(error);
   sendErrorToAdmin(error.message);
