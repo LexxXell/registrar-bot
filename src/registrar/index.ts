@@ -26,7 +26,7 @@ import {
 } from './helpers';
 
 export async function register(userData: RegData): Promise<PersonRegistrationResult> {
-  const browser: Browser = await puppeteer.launch({ headless: false });
+  const browser: Browser = await puppeteer.launch({ headless: /true/i.test(process.env.HEADLESS) || true });
   const page = await browser.newPage();
   try {
     page.setViewport({ width: 720, height: 720 });

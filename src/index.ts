@@ -6,7 +6,7 @@ import { regLoop } from './reg-loop';
 
 const logger = new Logger('Main');
 
-restartOnComplition(regLoop, 3600000, () => true, logger, 'RegLoop');
+restartOnComplition(regLoop, parseInt(process.env.REG_COOLDOWN_MS) || 3600000, () => true, logger, 'RegLoop');
 
 bot.launch().then(() => {
   logger.log('Bot is running');
