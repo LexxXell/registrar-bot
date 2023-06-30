@@ -4,6 +4,8 @@ import { keysAndValuesToShetInXlsxFile } from './keys-and-values-to-sheet-in-xls
 import { objectsToKeysAndValues } from './objects-to-keys-and-values.helper';
 
 export function registrationResultToReglist(regResult: RegistrationResult, reglistFilePath: string = reglistPath) {
-  keysAndValuesToShetInXlsxFile(reglistFilePath, objectsToKeysAndValues(regResult.registered), 'Registered');
-  keysAndValuesToShetInXlsxFile(reglistFilePath, objectsToKeysAndValues(regResult.nonRegistered), 'NonRegistered');
+  if (regResult.registered.length)
+    keysAndValuesToShetInXlsxFile(reglistFilePath, objectsToKeysAndValues(regResult.registered), 'Registered');
+  if (regResult.nonRegistered.length)
+    keysAndValuesToShetInXlsxFile(reglistFilePath, objectsToKeysAndValues(regResult.nonRegistered), 'NonRegistered');
 }

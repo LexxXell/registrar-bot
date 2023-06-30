@@ -70,4 +70,6 @@ export async function regLoop() {
     unlinkSync(reglistPath);
     await informOnReglistRemoved();
   }
+
+  logger.log('Finish registration process');
 }
