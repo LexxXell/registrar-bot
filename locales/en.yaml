@@ -2,7 +2,7 @@ start: >
   🖐 <b>Hello!</b>
 
 help: |
-  <b>This bot performs automatic registration of people under Article 11 Bucharest, for europass.com</b>
+  <b>This bot performs automatic registration of people, for europass.com</b>
 
   ➡️ <b>List of commands</b>:
   <code>/NewRegList + [upload_document XLSX]</code> - set RegList
