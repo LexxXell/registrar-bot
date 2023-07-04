@@ -5,7 +5,9 @@ help: |
   <b>This bot performs automatic registration of people, for europass.com</b>
 
   ➡️ <b>List of commands</b>:
-  <code>/NewRegList + [upload_document XLSX]</code> - set RegList
+  /getReglistTemplate - get the template of the reglist
+
+  <code>/NewRegList</code> + [upload_document XLSX] - set RegList
   /removeRegList - remove RegList
   /getRegList - get RegList
 
@@ -40,6 +42,10 @@ storage_is_empty: >
 
 storage_is_empty__help: >
   🚫  RegList NOT set
+
+get_template: |
+  ⬆️ Here is the RegList Template.
+  ❗️ <b>When filling out, please note that ALL cells must be in text format!</b>
 
 reg_list_upload_success: >
   ✅ NEW RegList uploaded successfully

@@ -52,6 +52,14 @@ reglistComposer.on('message', async (ctx: Context, next) => {
   } else await ctx.replyWithHTML(ctx.i18n.t('no_document'));
 });
 
+reglistComposer.command('getReglistTemplate', async (ctx: Context) => {
+  const filePath = path.resolve(reglistPath);
+  if (!existsSync(filePath)) {
+    return await ctx.replyWithHTML(ctx.i18n.t('error'));
+  }
+  await ctx.replyWithDocument({ source: filePath }, { caption: ctx.i18n.t('get_template'), parse_mode: 'HTML' });
+});
+
 reglistComposer.command('getRegList', async (ctx: Context) => {
   const filePath = path.resolve(reglistPath);
   if (!existsSync(filePath)) {
