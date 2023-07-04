@@ -46,3 +46,4 @@ lerna-debug.log*
 !.ex.env
 !.gitkeep
 !.keep
+!/storage/reglist_template.xlsx
