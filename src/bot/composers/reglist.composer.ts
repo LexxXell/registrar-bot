@@ -6,7 +6,7 @@ import { createWriteStream, existsSync, unlink } from 'node:fs';
 import { Context } from '../@types';
 import { Logger } from '../../helpers/logger.helper';
 import { errorToUser } from '../helpers/error-to-user.helper';
-import { reglistPath } from '../../helpers/constants.helper';
+import { reglistPath, templateReglistPath } from '../../helpers/constants.helper';
 
 const logger = new Logger('RegList Composer');
 
@@ -53,9 +53,9 @@ reglistComposer.on('message', async (ctx: Context, next) => {
 });
 
 reglistComposer.command('getReglistTemplate', async (ctx: Context) => {
-  const filePath = path.resolve(reglistPath);
+  const filePath = path.resolve(templateReglistPath);
   if (!existsSync(filePath)) {
-    return await ctx.replyWithHTML(ctx.i18n.t('error'));
+    return await errorToUser(ctx);
   }
   await ctx.replyWithDocument({ source: filePath }, { caption: ctx.i18n.t('get_template'), parse_mode: 'HTML' });
 });
