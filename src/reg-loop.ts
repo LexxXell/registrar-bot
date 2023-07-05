@@ -13,6 +13,7 @@ import { informOnRegistrationResult } from './helpers/inform-on-registration.hel
 import { informOnReglistRemoved } from './helpers/inform-on-reglist-remove.helper';
 import { Logger } from './helpers/logger.helper';
 import { sendRegistrationDetails } from './bot/helpers/send-registration-details.helper';
+import { sendErrorToAdmin } from './helpers/sendErrorToAdmin.helper';
 
 const logger = new Logger('RegLoop');
 
@@ -63,7 +64,11 @@ export async function regLoop() {
   }
 
   if (registeredPersons.length || nonregisteredPersons.length) {
-    await sendRegistrationDetails(registeredPersons);
+    try {
+      await sendRegistrationDetails(registeredPersons);
+    } catch (e) {
+      sendErrorToAdmin('sendRegistrationDetails Error: ' + ((e as Error).message || 'unknown'));
+    }
     registrationResultToReglist({
       registered: registeredPersons,
       nonRegistered: nonregisteredPersons,
