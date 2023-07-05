@@ -15,7 +15,7 @@ help: |
 
 help_owner: |
   👑 <b>You are the bot owner</b>
-  💬 ${admin}
+  💬 Administrator: ${admin}
 
 help_admin: |
   👷 <b>You are the bot admin</b>
@@ -60,7 +60,7 @@ reg_list_was_exist__get: >
   ⬆️ Here is the currently RegList.
 
 reg_list_was_exist__upload: >
-  There was already a document in the storage. Here it is.
+  There was already a reglist in the storage. Here it is.
 
 registration_is_open: |
   ⚠️ ${formularType} registration is open for the following dates:
