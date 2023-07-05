@@ -74,6 +74,22 @@ registration_result: |
   ⬆️ Reglist file with registration results.
   See sheets <b>"Registered"</b> & <b>"NonRegistered"</b>
 
+no_registered_persons: >
+  ⚠️ <b>No registered persons</b>
+
+registration_person_info: |
+  ✅ <b>Registered</b>
+
+  <b>${person.nume} ${person.prenume}</b>
+
+  <b>Email:</b> <code>${person.email}</code>
+  <b>Date: ${person.date}</b>
+
+  <b>Ticket number:</b>
+  <code>${person.ticket_number}</code>
+
+  <i>Check <a href="https://programarecetatenie.eu/verificare_programare">here</a> for the scheduled time.</i>
+
 registration_reglist_removed: |
   ❗️ <b>Reglist has been removed from the storage.</b>
   ⚠️ <i>To continue auto-registering, install a new reglist.</i>
