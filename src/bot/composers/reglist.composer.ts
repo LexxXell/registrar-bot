@@ -52,7 +52,7 @@ reglistComposer.on('message', async (ctx: Context, next) => {
   } else await ctx.replyWithHTML(ctx.i18n.t('no_document'));
 });
 
-reglistComposer.command('getReglistTemplate', async (ctx: Context) => {
+reglistComposer.hears(/\/getReglistTemplate/i, async (ctx: Context) => {
   const filePath = path.resolve(templateReglistPath);
   if (!existsSync(filePath)) {
     return await errorToUser(ctx);
@@ -60,7 +60,7 @@ reglistComposer.command('getReglistTemplate', async (ctx: Context) => {
   await ctx.replyWithDocument({ source: filePath }, { caption: ctx.i18n.t('get_template'), parse_mode: 'HTML' });
 });
 
-reglistComposer.command('getRegList', async (ctx: Context) => {
+reglistComposer.hears(/\/getRegList/i, async (ctx: Context) => {
   const filePath = path.resolve(reglistPath);
   if (!existsSync(filePath)) {
     return await ctx.replyWithHTML(ctx.i18n.t('storage_is_empty'));
@@ -71,7 +71,7 @@ reglistComposer.command('getRegList', async (ctx: Context) => {
   );
 });
 
-reglistComposer.command('removeRegList', async (ctx: Context) => {
+reglistComposer.hears(/\/removeRegList/i, async (ctx: Context) => {
   const filePath = path.resolve(reglistPath);
 
   if (!existsSync(filePath)) {
