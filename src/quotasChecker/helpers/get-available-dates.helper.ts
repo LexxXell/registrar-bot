@@ -1,6 +1,7 @@
 import { FormularTypes } from '../@types';
 
 import axios from 'axios';
+import https from 'https';
 
 export async function getAvailableDates(
   tip_formular: keyof typeof FormularTypes,
@@ -35,7 +36,10 @@ export async function getAvailableDates(
       (currentDate.getMonth() + 1),
     tip_formular: FormularTypes[tip_formular],
   };
-  const response = await axios.post(url_zile, reqBody,{responseType:'json'});
+  const response = await axios.post(url_zile, reqBody, {
+    responseType: 'json',
+    httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+  });
   const dates = (response.data as { data: string[] }).data;
   const dateList = [];
   while (startDate <= endDate) {

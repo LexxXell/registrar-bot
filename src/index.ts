@@ -1,4 +1,5 @@
 import './helpers/init-env.helper';
+import './db';
 import bot from './bot';
 import { Logger } from './helpers/logger.helper';
 import { restartOnComplition } from './helpers/restart-on-complition.helper';

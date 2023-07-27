@@ -1,42 +1,30 @@
-import { existsSync, unlinkSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { formularType, reglistPath } from './helpers/constants.helper';
+import { formularType } from './helpers/constants.helper';
 import { DateQuotas } from './quotasChecker/@types/date-quotas.type';
 import { getDateQuotas } from './quotasChecker';
-import { RegisteredPerson } from './@types/registered-person.type';
-import { FormularTypes, RegData, register } from './registrar';
+import { FormularTypes, register } from './registrar';
 import { informOnQuotas } from './helpers/inform-on-qoutas.helper';
-import { reglistToObjects } from './helpers/reglist-to-objects.helper';
 import { getAvailableQuotas } from './quotasChecker/helpers';
-import { registrationResultToReglist } from './helpers/registration-result-to-reglist.helper';
-import { informOnRegistrationResult } from './helpers/inform-on-registration.helper';
-import { informOnReglistRemoved } from './helpers/inform-on-reglist-remove.helper';
 import { Logger } from './helpers/logger.helper';
 import { sendRegistrationDetails } from './bot/helpers/send-registration-details.helper';
 import { sendErrorToAdmin } from './helpers/sendErrorToAdmin.helper';
+import { PersonModel } from './models/person.model';
 
 const logger = new Logger('RegLoop');
 
 export async function regLoop() {
   logger.log('New Reg loop');
-  if (!existsSync(resolve(reglistPath))) {
-    logger.log('Regfile not specified');
+  const persons = await PersonModel.find({ registaretion_number: { $eq: null }, error: { $eq: false } });
+  if (!persons.length) {
+    logger.log('Registration list is empty');
     return;
   }
-
-  logger.log('Regfile specified');
+  logger.log(`Persons on the registration list: ${persons.length}`);
   logger.log('Check quotas');
   const dateQuotas: Array<DateQuotas> = await getDateQuotas(formularType);
-
-  const registeredPersons: RegisteredPerson[] = [];
-  const nonregisteredPersons: RegData[] = [];
-
   if (dateQuotas.length) {
     logger.log('Quotas available');
     logger.log('Start registration process');
     informOnQuotas(dateQuotas);
-    const persons = reglistToObjects(reglistPath);
-
     dateQuotaLoop: for (let dateQuota of dateQuotas) {
       const date = dateQuota.date;
       let quota = dateQuota.quotas;
@@ -50,33 +38,34 @@ export async function regLoop() {
             break dateQuotaLoop;
           }
         }
-        const person = persons.shift() as RegData;
-        person.tip_formular = FormularTypes[formularType];
-        person.date = date;
-        const regResult = await register(person);
-        if (!regResult) {
-          nonregisteredPersons.push(person);
+        const person = persons.shift();
+        const regResult = await register({
+          ...person.toJSON(),
+          tip_formular: FormularTypes[formularType],
+          date,
+        });
+        if (regResult) {
+          person.registaretion_date = regResult.date;
+          person.registaretion_number = regResult.ticket_number;
+        } else {
+          person.error = true;
           continue;
         }
-        registeredPersons.push({ ...person, ...regResult });
+        await person.save();
       }
     }
-  }
-
-  if (registeredPersons.length || nonregisteredPersons.length) {
-    try {
-      await sendRegistrationDetails(registeredPersons);
-    } catch (e) {
-      sendErrorToAdmin('sendRegistrationDetails Error: ' + ((e as Error).message || 'unknown'));
+    if ((await PersonModel.find({ $or: [{ registaretion_number: { $ne: null } }, { error: true }] })).length) {
+      logger.log('Send registration info');
+      await sendRegistrationDetails();
+      logger.log('Cleaning registered and error persons');
+      try {
+        await PersonModel.deleteMany({ $or: [{ registaretion_number: { $ne: null } }, { error: true }] });
+      } catch (e) {
+        sendErrorToAdmin(`DELETION PERSONS ERROR\n${(e as Error).message}`);
+        logger.error(e);
+      }
     }
-    registrationResultToReglist({
-      registered: registeredPersons,
-      nonRegistered: nonregisteredPersons,
-    });
-    await informOnRegistrationResult();
-    unlinkSync(reglistPath);
-    await informOnReglistRemoved();
-  }
 
-  logger.log('Finish registration process');
+    logger.log('Finish registration process');
+  }
 }

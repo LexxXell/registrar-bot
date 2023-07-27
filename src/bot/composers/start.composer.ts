@@ -2,7 +2,7 @@ import { Composer } from 'telegraf';
 import { Context } from '../@types';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { reglistPath } from '../../helpers/constants.helper';
+import { PersonModel } from '../../models/person.model';
 
 export const startComposer: Composer<Context> = new Composer();
 
@@ -26,7 +26,9 @@ startComposer.hears(/^\/start$|^\/help$|^\/help[_\s]{1}(?<command>[^\s]+)$/, asy
     await ctx.replyWithHTML(ctx.i18n.t('help_admin', { admin: process.env.BOT_ADMIN_USERNAME || 'unspecified' }));
   }
 
+  const personsCount = await PersonModel.find({ registaretion_number: { $eq: null }, error: { $eq: false } }).count();
+
   await ctx.replyWithHTML(
-    ctx.i18n.t(existsSync(path.resolve(reglistPath)) ? 'reg_list_was_exist__help' : 'storage_is_empty__help'),
+    ctx.i18n.t(personsCount ? 'personslist_count' : 'personslist_empty', { count: personsCount }),
   );
 });

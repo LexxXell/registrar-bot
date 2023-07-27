@@ -2,14 +2,12 @@ start: >
   🖐 <b>Hello!</b>
 
 help: |
-  <b>This bot performs automatic registration of people, for europass.com</b>
+  <b>This bot performs automatic registration of people, for evropass.com</b>
 
   ➡️ <b>List of commands</b>:
-  /getReglistTemplate - get the template of the reglist
-
-  <code>/NewRegList</code> + [upload_document XLSX] - set RegList
-  /removeRegList - remove RegList
-  /getRegList - get RegList
+  <code>/addPerson + [data]</code> - add persone for registration (more /help_addpersone)
+  <code>/delPerson email</code> - delete the person with this email address
+  /listPersons - show persons reg list
 
   /help - see help
 
@@ -19,6 +17,19 @@ help_owner: |
 
 help_admin: |
   👷 <b>You are the bot admin</b>
+
+help_addpersone: |
+  ⬇️ Для добавления персоны в список регистрации:
+  <code>
+  /addPerson
+  Nume
+  Prenume
+  Data nasterii|
+  Locul nasterii
+  Prenume mama
+  Prenume tata
+  email - НЕ ОБЯЗАТЕЛЬНО
+  </code>
 
 help_not_exist: >
   🚫 Sorry, there is no help for your request
@@ -31,36 +42,46 @@ error: |
   <i>Contact your administrator</i>
   💬 ${admin}
 
-no_document: >
-  🚫 There is no file in the message
+person_added_success: |
+  ✅ Successful added ${persone.nume} ${persone.prenume}
+  <b>email:</b> <code><i>${persone.email}</i></code>
 
-no_xlsx_document: >
-  🚫 There is no .xlsx file in the message
+person_deleted_success: |
+  ✅ Successful deleted <b>${email}</b>
 
-storage_is_empty: >
-  🚫 There is no reglist in the storage
+person_not_found: |
+  🚫 No record with that email
 
-storage_is_empty__help: >
-  🚫  RegList NOT set
+personslist_empty: |
+  🚫 Persons reg list empty
 
-get_template: |
-  ⬆️ Here is the RegList Template.
-  ❗️ <b>When filling out, please note that ALL cells must be in text format!</b>
+personslist_count: >
+  ✅ Persons on the registration list: ${count}
 
-reg_list_upload_success: >
-  ✅ NEW RegList uploaded successfully
+person: |
+  📎 On the registration list
+  <b>${person.nume} ${person.prenume}</b>
+  <code><i>${person.email}</i></code>
 
-reg_list_removed_success: >
-  ✅ RegList removed successfully
+person_success: |
+  ✅ Registered
+  <b>${person.nume} ${person.prenume}</b>
+  <code><i>${person.email}</i></code>
+  <b>Date: ${person.registaretion_date}</b>
+  <i>Number: <code>${person.registaretion_number}</code></i>
 
-reg_list_was_exist__help: >
-  ✅ RegList is set
+  <i><a href="https://programarecetatenie.eu/verificare_programare">Check scheduled time here</a>.</i>
 
-reg_list_was_exist__get: >
-  ⬆️ Here is the currently RegList.
-
-reg_list_was_exist__upload: >
-  There was already a reglist in the storage. Here it is.
+person_error: |
+  🚫 Error
+  <b>${person.nume}
+  ${person.prenume}</b>
+  <i>${person.data_nasterii}
+  ${person.locul_nasterii}
+  ${person.prenume_mama}
+  ${person.prenume_tata}
+  </i>
+  <code><i>${person.email}</i></code>
 
 registration_is_open: |
   ⚠️ ${formularType} registration is open for the following dates:
@@ -69,27 +90,3 @@ registration_is_open: |
   ${strDateQuotas}
 
   ❗️ <b>The registration process from RegList is started.</b>
-
-registration_result: |
-  ⬆️ Reglist file with registration results.
-  See sheets <b>"Registered"</b> & <b>"NonRegistered"</b>
-
-no_registered_persons: >
-  ⚠️ <b>No registered persons</b>
-
-registration_person_info: |
-  ✅ <b>Registered</b>
-
-  <b>${person.nume} ${person.prenume}</b>
-
-  <b>Email:</b> <code>${person.email}</code>
-  <b>Date: ${person.date}</b>
-
-  <b>Ticket number:</b>
-  <code>${person.ticket_number}</code>
-
-  <i>Check <a href="https://programarecetatenie.eu/verificare_programare">here</a> for the scheduled time.</i>
-
-registration_reglist_removed: |
-  ❗️ <b>Reglist has been removed from the storage.</b>
-  ⚠️ <i>To continue auto-registering, install a new reglist.</i>

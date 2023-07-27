@@ -3,6 +3,7 @@ import { FormularTypes } from '../@types';
 import { ZiiDate } from '../@types/zii-date.type';
 import { url_zii } from './constants.helper';
 import axios from 'axios';
+import https from 'https';
 
 const logger = new Logger('getAvailableQuotas');
 
@@ -17,7 +18,10 @@ export async function getAvailableQuotas(tip_formular: keyof typeof FormularType
       tip_formular: FormularTypes[tip_formular],
       azi: date,
     };
-    const response = await axios.post(url_zii, reqBody, { responseType: 'json' });
+    const response = await axios.post(url_zii, reqBody, {
+      responseType: 'json',
+      httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+    });
     return response.data?.numar_ramase || 0;
   } catch (e) {
     logger.error(e);
