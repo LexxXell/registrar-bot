@@ -59,5 +59,8 @@ function rawPersonToObj([
   prenume_tata,
   email,
 ]: string[]): IPerson {
+  if (email && !/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(email)) {
+    throw new Error('Wrong email format');
+  }
   return { nume, prenume, data_nasterii, locul_nasterii, prenume_mama, prenume_tata, email };
 }
