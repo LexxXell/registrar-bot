@@ -64,7 +64,7 @@ function getAutoEmail(ctx: IPerson | any, useUUID: boolean = /true/.test(process
     ? `${uuid4().replace(/-/g, '')}`
     : `${ctx.nume}${ctx.prenume}${ctx.data_nasterii.replace(/[-,\.]/g, '')}`;
   const domen = process.env.AUTO_EMAIL_DOMEN || 'mail.com';
-  return `${address}@${domen}`;
+  return `${address}@${domen}`.replace(/\s/g, '');
 }
 
 export const PersonModel = model<IPersonModel>('Person', PersonSchema);
