@@ -34,7 +34,7 @@ function sleep(ms: number) {
 }
 
 export async function register(userData: RegData): Promise<PersonRegistrationResult> {
-  const browser: Browser = await puppeteer.launch({ headless: false });
+  const browser: Browser = await puppeteer.launch({ headless: /true/.test(process.env.HEADLESS) });
   const page = await browser.newPage();
   try {
     page.setViewport({ width: 720, height: 720 });
