@@ -55,12 +55,21 @@ function rawPersonToObj([
   prenume,
   data_nasterii,
   locul_nasterii,
+  numar_pasaport,
   prenume_mama,
   prenume_tata,
   email,
 ]: string[]): IPerson {
+  nume = nume.trim();
+  prenume = prenume.trim();
+  data_nasterii = data_nasterii.replace(/\s/g, '');
+  locul_nasterii = locul_nasterii.trim();
+  numar_pasaport = numar_pasaport.trim();
+  prenume_mama = prenume_mama.trim();
+  prenume_tata = prenume_tata.trim();
+  email = email?.trim();
   if (email && !/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(email)) {
     throw new Error('Wrong email format');
   }
-  return { nume, prenume, data_nasterii, locul_nasterii, prenume_mama, prenume_tata, email };
+  return { nume, prenume, data_nasterii, locul_nasterii, numar_pasaport, prenume_mama, prenume_tata, email };
 }

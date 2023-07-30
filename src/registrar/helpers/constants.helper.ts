@@ -23,6 +23,7 @@ export const loculNasteriiSelector = '#locul_nasterii';
 export const prenumeMamaSelector = '#prenume_mama';
 export const prenumeTataSelector = '#prenume_tata';
 export const emailSelector = '#email';
+export const numarPassportSelector = '#numar_pasaport';
 export const monthDatePickerSelector =
   '#data_programarii > div > div.datepicker-days > table > thead > tr:nth-child(2) > th.datepicker-switch';
 export const nextButtonDatePickerSelector =
@@ -31,8 +32,12 @@ export const calendarColumnSelector = '#data_programarii > div > div.datepicker-
 export const calendarRowSelector =
   '#data_programarii > div > div.datepicker-days > table > tbody > tr:nth-child(1) > td';
 export const flagSelector = '#gdpr';
-export const confirmButtonSelector = '#formular > div.row.mt-3 > div > button';
+export const confirmButtonSelector = '#transmite';
 export const ticketNumberSelector = '#validation_box > div > div > div > p:nth-child(11)';
 export const regDateSelector = `#validation_box > div > div > div > p:nth-child(6) > span:nth-child(2)`;
 export const getSelectDateSelector = (currentWeek: string | number, currentDay: string | number) =>
   `#data_programarii > div > div.datepicker-days > table > tbody > tr:nth-child(${currentWeek}) > td:nth-child(${currentDay})`;
+export const setCalendar = (date: Date) =>
+  `$("#data_programarii > div > div.datepicker-days").datepicker('setDate', '${
+    (date.getMonth() + 1).toString() + '/' + date.getDate().toString() + '/' + date.getFullYear().toString()
+  }');`;

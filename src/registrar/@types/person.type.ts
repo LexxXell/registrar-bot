@@ -6,4 +6,5 @@ export type Person = {
   locul_nasterii: string;
   prenume_mama: string;
   prenume_tata: string;
+  numar_pasaport: string;
 };

@@ -23,68 +23,71 @@ import {
   ticketNumberSelector,
   regDateSelector,
   getSelectDateSelector,
+  numarPassportSelector,
+  setCalendar,
 } from './helpers';
 
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 export async function register(userData: RegData): Promise<PersonRegistrationResult> {
-  const browser: Browser = await puppeteer.launch({ headless: /true/.test(process.env.HEADLESS) ? 'new' : false });
+  const browser: Browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   try {
     page.setViewport({ width: 720, height: 720 });
 
-    await page.goto(siteUrl, { waitUntil: 'domcontentloaded', timeout: 10000 });
+    await page.goto(siteUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
 
-    await page.waitForSelector('#tip_formular', { timeout: 10000 });
+    await page.waitForSelector('#tip_formular', { timeout: 15000 });
     await page.click(articuleButtonSelector);
-    await page.$(articuleSearchSelector).then((v) => v?.type(userData.tip_formular));
+    await sleep(2000 + Math.random() * 100);
+    await page.$(articuleSearchSelector).then((v) => v?.type(userData.tip_formular, { delay: 100 }));
+    await sleep(2000 + Math.random() * 100);
     await page.keyboard.press('Enter');
-    await page.$(numePassportSelector).then((v) => v?.type(userData.nume));
-    await page.$(prenumePassportSelector).then((v) => v?.type(userData.prenume));
-    await page.$(dataNasteriiSelector).then((v) => v?.type(userData.data_nasterii));
-    await page.$(loculNasteriiSelector).then((v) => v?.type(userData.locul_nasterii));
-    await page.$(prenumeMamaSelector).then((v) => v?.type(userData.prenume_mama));
-    await page.$(prenumeTataSelector).then((v) => v?.type(userData.prenume_tata));
-    await page.$(emailSelector).then((v) => v?.type(userData.email));
 
-    const date = new Date(userData.date);
-    const m = await page.$eval(monthDatePickerSelector, (element) => {
-      return element.innerHTML;
-    });
-    let firstWord = m.replace(/ .*/, '');
-    let currentMonth = months.findIndex((el) => el === firstWord);
-    while (currentMonth !== date.getMonth()) {
-      await page.click(nextButtonDatePickerSelector);
-      let month = await page.$eval(monthDatePickerSelector, (element) => {
-        return element.innerHTML;
-      });
-      firstWord = month.replace(/ .*/, '');
-      currentMonth = months.findIndex((el) => el === firstWord);
-    }
+    await page.$(numePassportSelector).then((v) => v?.type(userData.nume, { delay: 200 }));
+    await sleep(500 + Math.random() * 100);
+    await page.$(prenumePassportSelector).then((v) => v?.type(userData.prenume, { delay: 200 }));
+    await sleep(500 + Math.random() * 100);
+    await page.$(dataNasteriiSelector).then((v) => v?.type(userData.data_nasterii, { delay: 200 }));
+    await sleep(500 + Math.random() * 100);
+    await page.$(loculNasteriiSelector).then((v) => v?.type(userData.locul_nasterii, { delay: 200 }));
+    await sleep(500 + Math.random() * 100);
+    await page.$(prenumeMamaSelector).then((v) => v?.type(userData.prenume_mama, { delay: 200 }));
+    await sleep(500 + Math.random() * 100);
 
-    let calendarColumnItemCount = await page.$$eval(calendarColumnSelector, (el) => el.length);
-    let calendarRowItemCount = await page.$$eval(calendarRowSelector, (el) => el.length);
+    await page.$(prenumeTataSelector).then((v) => v?.type(userData.prenume_tata, { delay: 200 }));
+    await sleep(500 + Math.random() * 100);
+    await page.$(emailSelector).then((v) => v?.type(userData.email, { delay: 200 }));
+    await sleep(500 + Math.random() * 100);
+    await page.$(numarPassportSelector).then((v) => v?.type(userData.numar_pasaport, { delay: 200 }));
 
-    //Нужно чтобы случайно не нажать на дату предыдущего месяца
-    let currentWeek = date.getDate() > 7 ? 2 : 1;
-    while (currentWeek < calendarColumnItemCount + 1) {
-      let currentDay = 1;
-      while (currentDay < calendarRowItemCount + 1) {
-        let text = await page.$eval(getSelectDateSelector(currentWeek, currentDay), (el) => el.innerHTML);
-        if (text == String(date.getDate())) {
-          await page.click(getSelectDateSelector(currentWeek, currentDay));
-          currentDay = calendarRowItemCount;
-          currentWeek = calendarColumnItemCount;
-        }
-        currentDay++;
-      }
-      currentWeek++;
-    }
+    await sleep(2000 + Math.random() * 100);
+    const date: Date = new Date(userData.date);
 
+    await page.evaluate((_date: string) => {
+      console.log(_date);
+      let element = document.createElement('script');
+      element.innerHTML = _date;
+      document.body.appendChild(element);
+    }, setCalendar(date));
+
+    await sleep(1500 + Math.random() * 100);
     await page.click(flagSelector);
+    await page.evaluate((confirmSelector) => {
+      let element = document.createElement('script');
+      element.innerHTML = `document.getElementById("${confirmSelector}").removeAttribute("disabled")`;
+      document.body.appendChild(element);
+    }, confirmButtonSelector);
+    await sleep(1500 + Math.random() * 100);
     await page.click(confirmButtonSelector);
 
     let ticket_number: string;
     let regDate: string;
-    await page.waitForSelector(ticketNumberSelector, { timeout: 5000 });
+    await page.waitForSelector(ticketNumberSelector, { timeout: 15000 });
     ticket_number = await page.$eval(ticketNumberSelector, (el) => el.innerHTML);
     regDate = await page.$eval(regDateSelector, (el) => el.innerHTML);
 
