@@ -13,7 +13,7 @@ export async function sendRegistrationDetails() {
   for (let person of persons) {
     try {
       await sendMessage(
-        i18nMessage(person.error ? 'person_error' : person.registaretion_number ? 'person_success' : 'person', {
+        i18nMessage(person.error ? 'person_error' : person.registration_number ? 'person_success' : 'person', {
           person,
         }),
         messageRecipients,

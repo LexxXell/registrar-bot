@@ -1,105 +1,103 @@
-export * from './@types';
-import { Browser } from 'puppeteer';
-import puppeteer from 'puppeteer-extra';
-import { PersonRegistrationResult, RegData } from './@types';
+import puppeteer, { Browser, Page } from 'puppeteer';
+import { Logger } from '../helpers/logger.helper';
+import { FormularTypes, PersonRegistrationResult, RegData } from './@types';
 import {
-  siteUrl,
-  months,
-  articuleSearchSelector,
-  numePassportSelector,
-  prenumePassportSelector,
   dataNasteriiSelector,
-  loculNasteriiSelector,
-  prenumeMamaSelector,
-  prenumeTataSelector,
   emailSelector,
-  monthDatePickerSelector,
-  nextButtonDatePickerSelector,
-  calendarColumnSelector,
-  calendarRowSelector,
-  articuleButtonSelector,
-  flagSelector,
-  confirmButtonSelector,
-  ticketNumberSelector,
+  formularSearchSelector,
+  formularSelector,
+  gdprSelector,
+  loculNasteriiSelector,
+  numarPasaportSelector,
+  numePasaportSelector,
+  prenumeMamaSelector,
+  prenumePasaportSelector,
+  prenumeTataSelector,
+  programmereUrl,
   regDateSelector,
-  getSelectDateSelector,
-  numarPassportSelector,
-  setCalendar,
+  ticketNumberSelector,
+  transmiteButton,
+  typeFormmularSelector,
 } from './helpers';
+import { delay } from '../helpers/delay.helper';
 
-function sleep(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+const logger = new Logger('Registrar');
 
-export async function register(userData: RegData): Promise<PersonRegistrationResult> {
-  const browser: Browser = await puppeteer.launch({ headless: /true/.test(process.env.HEADLESS) });
-  const page = await browser.newPage();
+const typeDelay = 100;
+
+export async function register(regData: RegData): Promise<PersonRegistrationResult> {
+  const browser: Browser = await puppeteer.launch({ headless: /true/.test(process.env.HEADLESS) ? 'new' : false });
   try {
+    const page = await browser.newPage();
     page.setViewport({ width: 720, height: 720 });
 
-    await page.goto(siteUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    await page.goto(programmereUrl, { waitUntil: 'networkidle2' });
+    await delay(1000);
 
-    await page.waitForSelector('#tip_formular', { timeout: 15000 });
-    await page.click(articuleButtonSelector);
-    await sleep(2000 + Math.random() * 100);
-    await page.$(articuleSearchSelector).then((v) => v?.type(userData.tip_formular, { delay: 100 }));
-    await sleep(2000 + Math.random() * 100);
-    await page.keyboard.press('Enter');
+    await setFormularType(page, regData.tip_formular);
+    await delay(1000);
 
-    await page.$(numePassportSelector).then((v) => v?.type(userData.nume, { delay: 200 }));
-    await sleep(500 + Math.random() * 100);
-    await page.$(prenumePassportSelector).then((v) => v?.type(userData.prenume, { delay: 200 }));
-    await sleep(500 + Math.random() * 100);
-    await page.$(dataNasteriiSelector).then((v) => v?.type(userData.data_nasterii, { delay: 200 }));
-    await sleep(500 + Math.random() * 100);
-    await page.$(loculNasteriiSelector).then((v) => v?.type(userData.locul_nasterii, { delay: 200 }));
-    await sleep(500 + Math.random() * 100);
-    await page.$(prenumeMamaSelector).then((v) => v?.type(userData.prenume_mama, { delay: 200 }));
-    await sleep(500 + Math.random() * 100);
+    await page.type(numePasaportSelector, regData.nume, { delay: typeDelay });
+    await delay(1000);
+    await page.type(prenumePasaportSelector, regData.prenume, { delay: typeDelay });
+    await delay(1000);
+    await page.type(dataNasteriiSelector, regData.data_nasterii, { delay: typeDelay });
+    await delay(1000);
+    await page.click(loculNasteriiSelector, { delay: typeDelay });
+    await page.type(loculNasteriiSelector, regData.locul_nasterii, { delay: typeDelay });
+    await delay(1000);
+    await page.type(prenumeMamaSelector, regData.prenume_mama, { delay: typeDelay });
+    await delay(1000);
+    await page.type(prenumeTataSelector, regData.prenume_tata, { delay: typeDelay });
+    await delay(1000);
+    await page.type(emailSelector, regData.email, { delay: typeDelay });
+    await delay(1000);
+    await page.type(numarPasaportSelector, regData.numar_pasaport, { delay: typeDelay });
+    await delay(1000);
 
-    await page.$(prenumeTataSelector).then((v) => v?.type(userData.prenume_tata, { delay: 200 }));
-    await sleep(500 + Math.random() * 100);
-    await page.$(emailSelector).then((v) => v?.type(userData.email, { delay: 200 }));
-    await sleep(500 + Math.random() * 100);
-    await page.$(numarPassportSelector).then((v) => v?.type(userData.numar_pasaport, { delay: 200 }));
+    // Set calendar
+    await page.click(`td.day[data-date="${Date.parse(regData.date)}"]`, { delay: typeDelay });
+    await delay(1000);
 
-    await sleep(2000 + Math.random() * 100);
-    const date: Date = new Date(userData.date);
+    await page.click(gdprSelector, { delay: typeDelay });
+    await delay(1000);
 
-    await page.evaluate((_date: string) => {
-      console.log(_date);
-      let element = document.createElement('script');
-      element.innerHTML = _date;
-      document.body.appendChild(element);
-    }, setCalendar(date));
+    await clickTransmiteButton(page);
+    await delay(1000);
 
-    await sleep(1500 + Math.random() * 100);
-    await page.click(flagSelector);
-    await page.evaluate((confirmSelector) => {
-      let element = document.createElement('script');
-      element.innerHTML = `document.getElementById("${confirmSelector}").removeAttribute("disabled")`;
-      document.body.appendChild(element);
-    }, confirmButtonSelector);
-    await sleep(1500 + Math.random() * 100);
-    await page.click(confirmButtonSelector);
-
-    let ticket_number: string;
-    let regDate: string;
     await page.waitForSelector(ticketNumberSelector, { timeout: 15000 });
-    ticket_number = await page.$eval(ticketNumberSelector, (el) => el.innerHTML);
-    regDate = await page.$eval(regDateSelector, (el) => el.innerHTML);
+    const ticket_number = await page.$eval(ticketNumberSelector, (el) => el.innerHTML);
+    const date = await page.$eval(regDateSelector, (el) => el.innerHTML);
 
     await browser.close();
 
     return {
       ticket_number,
-      date: regDate,
-      email: userData.email,
+      date,
     };
-  } catch (error) {
+  } catch (e) {
+    logger.error(e);
     await browser.close();
-    return;
+    return null;
   }
 }
+
+async function setFormularType(page: Page, type: FormularTypes) {
+  await page.waitForSelector(typeFormmularSelector, { timeout: 15000 });
+  await page.click(formularSelector);
+  await page.type(formularSearchSelector, type, { delay: typeDelay });
+  await page.keyboard.press('Enter');
+}
+
+async function clickTransmiteButton(page: Page) {
+  await page.waitForSelector('#transmite');
+  await page.waitForFunction(() => {
+    const button = document.querySelector('#transmite');
+    return !(button as any).disabled;
+  });
+  await page.click(transmiteButton);
+}
+
+// if (require.main === module) {
+//   register().then((res) => console.log(res));
+// }

@@ -14,8 +14,8 @@ export interface IPerson {
   numar_pasaport: string;
   prenume_mama: string;
   prenume_tata: string;
-  registretion_date?: string;
-  registretion_number?: string;
+  registration_date?: string;
+  registration_number?: string;
   error?: boolean;
 }
 
@@ -31,8 +31,8 @@ export const PersonSchema = new Schema<IPersonModel>(
     numar_pasaport: { type: 'string', required: true },
     prenume_mama: { type: 'string', required: true },
     prenume_tata: { type: 'string', required: true },
-    registretion_date: { type: 'string', required: false, default: null },
-    registretion_number: { type: 'string', required: false, default: null },
+    registration_date: { type: 'string', required: false, default: null },
+    registration_number: { type: 'string', required: false, default: null },
     error: { type: 'boolean', default: false },
   },
   {
