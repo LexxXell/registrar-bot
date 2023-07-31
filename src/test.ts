@@ -1,32 +1,34 @@
 import puppeteer, { Browser, Page } from 'puppeteer';
-import { Logger } from '../helpers/logger.helper';
-import { FormularTypes, PersonRegistrationResult, RegData } from './@types';
-import {
-  dataNasteriiSelector,
-  emailSelector,
-  formularSearchSelector,
-  formularSelector,
-  gdprSelector,
-  loculNasteriiSelector,
-  numarPasaportSelector,
-  numePasaportSelector,
-  prenumeMamaSelector,
-  prenumePasaportSelector,
-  prenumeTataSelector,
-  programmereUrl,
-  regBlankSelector,
-  regDateSelector,
-  ticketNumberSelector,
-  transmiteButton,
-  typeFormmularSelector,
-} from './helpers';
-import { delay } from '../helpers/delay.helper';
+import { delay } from './helpers/delay.helper';
+import { Logger } from './helpers/logger.helper';
+import { FormularTypes, PersonRegistrationResult, RegData } from './registrar/@types';
 
 const logger = new Logger('Registrar');
 
+const programmereUrl = 'https://programarecetatenie.eu/programare_online';
+const typeFormmularSelector = '#tip_formular';
+const formularSelector =
+  '#formular > div:nth-child(1) > div > div > div > div > div:nth-child(2) > span > span.selection > span';
+const formularSearchSelector = 'body > span > span > span.select2-search.select2-search--dropdown > input';
+const numePasaportSelector = '#nume_pasaport';
+const prenumePasaportSelector = '#prenume_pasaport';
+const dataNasteriiSelector = '#data_nasterii';
+const loculNasteriiSelector = '#locul_nasterii';
+const prenumeMamaSelector = '#prenume_mama';
+const prenumeTataSelector = '#prenume_tata';
+const emailSelector = '#email';
+const numarPasaportSelector = '#numar_pasaport';
+const gdprSelector = `#gdpr`;
+const transmiteButton = '#transmite';
+const ticketNumberSelector = '#validation_box > div > div > div > p:nth-child(11)';
+const regDateSelector = `#validation_box > div > div > div > p:nth-child(6) > span:nth-child(2)`;
+const regBlankSelector = '#error_div';
+
 const typeDelay = 100;
 
-export async function register(regData: RegData): Promise<PersonRegistrationResult> {
+process.env['HEADLESS'] = 'false';
+
+async function register(regData: RegData): Promise<PersonRegistrationResult> {
   const browser: Browser = await puppeteer.launch({ headless: /true/.test(process.env.HEADLESS) ? 'new' : false });
   try {
     const page = await browser.newPage();
@@ -106,6 +108,17 @@ async function clickTransmiteButton(page: Page) {
   await page.click(transmiteButton);
 }
 
-// if (require.main === module) {
-//   register().then((res) => console.log(res));
-// }
+if (require.main === module) {
+  register({
+    nume: 'Lee',
+    prenume: 'Brandon',
+    data_nasterii: '1965-02-01',
+    locul_nasterii: 'USA',
+    prenume_mama: 'Brigit',
+    prenume_tata: 'Brus',
+    email: 'brandon1965lee2@gmail.com',
+    numar_pasaport: '123456781',
+    tip_formular: FormularTypes.ART11_BUCURESTI,
+    date: '2023-08-08',
+  }).then((res) => console.log(res));
+}

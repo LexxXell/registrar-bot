@@ -31,3 +31,4 @@ export const gdprSelector = `#gdpr`;
 export const transmiteButton = '#transmite';
 export const ticketNumberSelector = '#validation_box > div > div > div > p:nth-child(11)';
 export const regDateSelector = `#validation_box > div > div > div > p:nth-child(6) > span:nth-child(2)`;
+export const regBlankSelector = '#error_div';
