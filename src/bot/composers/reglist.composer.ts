@@ -44,7 +44,7 @@ reglistComposer.hears(/\/listpersons/i, async (ctx: Context) => {
   }
   for (let person of personsList) {
     await ctx.replyWithHTML(
-      ctx.i18n.t(person.error ? 'person_error' : person.registaretion_number ? 'person_success' : 'person', { person }),
+      ctx.i18n.t(person.error ? 'person_error' : person.registretion_number ? 'person_success' : 'person', { person }),
     );
     await delay(100);
   }
