@@ -1,13 +1,14 @@
 import { formularType } from './helpers/constants.helper';
 import { DateQuotas } from './quotasChecker/@types/date-quotas.type';
 import { getDateQuotas } from './quotasChecker';
-import { FormularTypes, register } from './registrar';
+import { register } from './registrar';
 import { informOnQuotas } from './helpers/inform-on-qoutas.helper';
 import { getAvailableQuotas } from './quotasChecker/helpers';
 import { Logger } from './helpers/logger.helper';
 import { sendRegistrationDetails } from './bot/helpers/send-registration-details.helper';
 import { sendErrorToAdmin } from './helpers/sendErrorToAdmin.helper';
 import { PersonModel } from './models/person.model';
+import { FormularTypes } from './registrar/@types';
 
 const logger = new Logger('RegLoop');
 
