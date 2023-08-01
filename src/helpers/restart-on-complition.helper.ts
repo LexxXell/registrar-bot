@@ -1,10 +1,11 @@
 import { ILogger } from '../@types';
+import { Logger } from './logger.helper';
 
 export const restartOnComplition = async (
   callback: Function,
   cooldownMs: number,
   checActive: (() => Promise<boolean>) | (() => boolean) = () => true,
-  logger: ILogger = console,
+  logger: ILogger = new Logger('restartOnComplition'),
   namespace?: string,
 ) => {
   try {

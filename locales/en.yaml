@@ -68,8 +68,8 @@ person_success: |
   ✅ Registered
   <b>${person.nume} ${person.prenume}</b>
   <code><i>${person.email}</i></code>
-  <b>Date: ${person.registaretion_date}</b>
-  <i>Number: <code>${person.registaretion_number}</code></i>
+  <b>Date: ${person.registration_date}</b>
+  <i>Number: <code>${person.registration_number}</code></i>
 
   <i><a href="https://programarecetatenie.eu/verificare_programare">Check scheduled time here</a>.</i>
 
@@ -79,6 +79,7 @@ person_error: |
   ${person.prenume}</b>
   <i>${person.data_nasterii}
   ${person.locul_nasterii}
+  ${person.numar_pasaport}
   ${person.prenume_mama}
   ${person.prenume_tata}
   </i>

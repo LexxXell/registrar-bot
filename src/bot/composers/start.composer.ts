@@ -26,7 +26,7 @@ startComposer.hears(/^\/start$|^\/help$|^\/help[_\s]{1}(?<command>[^\s]+)$/, asy
     await ctx.replyWithHTML(ctx.i18n.t('help_admin', { admin: process.env.BOT_ADMIN_USERNAME || 'unspecified' }));
   }
 
-  const personsCount = await PersonModel.find({ registaretion_number: { $eq: null }, error: { $eq: false } }).count();
+  const personsCount = await PersonModel.find({ registration_number: { $eq: null }, error: { $eq: false } }).count();
 
   await ctx.replyWithHTML(
     ctx.i18n.t(personsCount ? 'personslist_count' : 'personslist_empty', { count: personsCount }),

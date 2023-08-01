@@ -40,26 +40,32 @@ export async function regLoop() {
           }
         }
         const person = persons.shift();
-        const regResult = await register({
-          ...person.toJSON(),
-          tip_formular: FormularTypes[formularType],
-          date,
-        });
-        if (regResult) {
-          person.registration_date = regResult.date;
-          person.registration_number = regResult.ticket_number;
-        } else {
-          person.error = true;
-          continue;
+        person.error = true;
+
+        try {
+          const regResult = await register({
+            ...person.toJSON(),
+            tip_formular: FormularTypes[formularType],
+            date,
+          });
+
+          if (regResult.date && regResult.ticket_number) {
+            person.registration_date = regResult.date;
+            person.registration_number = regResult.ticket_number;
+            person.error = false;
+          }
+        } catch (e) {
+          logger.error(e);
         }
+
         await person.save();
       }
     }
     if ((await PersonModel.find({ $or: [{ registration_number: { $ne: null } }, { error: true }] })).length) {
       logger.log('Send registration info');
       await sendRegistrationDetails();
-      logger.log('Cleaning registered and error persons');
       try {
+        logger.log('Cleaning registered and error persons');
         await PersonModel.deleteMany({ $or: [{ registration_number: { $ne: null } }, { error: true }] });
       } catch (e) {
         sendErrorToAdmin(`DELETION PERSONS ERROR\n${(e as Error).message}`);

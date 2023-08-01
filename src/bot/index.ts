@@ -8,7 +8,6 @@ import { startComposer } from './composers/start.composer';
 import { idGuard } from './middlewares/id-guard.middleware';
 import { reglistComposer } from './composers/reglist.composer';
 import { sendErrorToAdmin } from '../helpers/sendErrorToAdmin.helper';
-import { sendRegistrationDetails } from './helpers/send-registration-details.helper';
 
 const logger = new Logger('Registrar Bot');
 
@@ -28,10 +27,6 @@ bot.use(idGuard);
 
 bot.use(startComposer);
 bot.use(reglistComposer);
-
-bot.command('test', (ctx) => {
-  sendRegistrationDetails();
-});
 
 bot.catch((error: Error) => {
   logger.error(error);

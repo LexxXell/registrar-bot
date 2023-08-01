@@ -56,7 +56,7 @@ export async function register(regData: RegData): Promise<PersonRegistrationResu
     await page.type(numarPasaportSelector, regData.numar_pasaport, { delay: typeDelay });
     await delay(1000);
 
-    // Set calendar
+    // TODO: Set calendar добавить пролистывание месяцов
     await page.click(`td.day[data-date="${Date.parse(regData.date)}"]`, { delay: typeDelay });
     await delay(1000);
 
@@ -65,8 +65,6 @@ export async function register(regData: RegData): Promise<PersonRegistrationResu
 
     await clickTransmiteButton(page);
     await delay(1000);
-
-    await page.screenshot({ path: './1.png' });
 
     await page.waitForSelector(ticketNumberSelector, { timeout: 15000 });
     const ticket_number = await page.$eval(ticketNumberSelector, (el) => el.innerHTML);
@@ -100,10 +98,5 @@ async function clickTransmiteButton(page: Page) {
     const button = document.querySelector('#transmite');
     return !(button as any).disabled;
   });
-  console.log('Button is active');
   await page.click(transmiteButton);
 }
-
-// if (require.main === module) {
-//   register().then((res) => console.log(res));
-// }

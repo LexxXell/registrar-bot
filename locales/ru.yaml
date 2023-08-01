@@ -19,18 +19,17 @@ help_admin: |
   👷 <b>Вы администратор бота</b>
 
 help_addpersone: |
-  ⬇️ Command to add a persone to the list:
-  <code>
-  /addPerson
-  Nume
-  Prenume
-  Data nasterii|
-  Locul nasterii
-  Numar pasaport
-  Prenume mama
-  Prenume tata
-  email - НЕ ОБЯЗАТЕЛЬНО
-  </code>
+  ⬇️ Добавить запись в лист регистрации:
+  ❗️ <b>ЗАПОЛНЯТЬ ЛАТИНИЦЕЙ</b>
+  <code>/addPerson
+  Фамилия
+  Имя
+  Дата рождения (ГГГГ-ММ-ДД)
+  Страна рождения
+  Номер паспорта
+  Имя матери
+  Имя отца
+  email - НЕ ОБЯЗАТЕЛЬНО</code>
 
 help_not_exist: >
   🚫 Сожалею, по данному запросу нет справки
@@ -68,8 +67,8 @@ person_success: |
   ✅ Зарегистрирован
   <b>${person.nume} ${person.prenume}</b>
   <code><i>${person.email}</i></code>
-  <b>Дата: ${person.registaretion_date}</b>
-  <i>Номер: <code>${person.registaretion_number}</code></i>
+  <b>Дата: ${person.registration_date}</b>
+  <i>Номер: <code>${person.registration_number}</code></i>
 
   <i><a href="https://programarecetatenie.eu/verificare_programare">Тут можно проверить назначенное время</a>.</i>
 
@@ -79,6 +78,7 @@ person_error: |
   ${person.prenume}</b>
   <i>${person.data_nasterii}
   ${person.locul_nasterii}
+  ${person.numar_pasaport}
   ${person.prenume_mama}
   ${person.prenume_tata}
   <code>${person.email}</code>

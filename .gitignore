@@ -43,6 +43,9 @@ lerna-debug.log*
 
 .cookies
 .*.env
+
+reg_media/*.png
+
 !.ex.env
 !.gitkeep
 !.keep
