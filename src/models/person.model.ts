@@ -51,12 +51,14 @@ PersonSchema.pre('save', async function (next) {
   if (!dateRegex.test(this.data_nasterii)) {
     throw new Error('Wrong data_nasterii format. <yyyy-mm-dd>');
   }
-  if (!this.email) {
+  if (this.isNew && !this.email) {
     this.email = getAutoEmail(this);
+    const existingPerson = await this.$model('Person').findOne({ email: this.email });
+    if (existingPerson) {
+      this.email = getAutoEmail(this, true);
+    }
   }
-  if (await this.$model('Person').findOne({ email: this.email })) {
-    this.email = getAutoEmail(this, true);
-  }
+  next();
 });
 
 function getAutoEmail(ctx: IPerson | any, useUUID: boolean = /true/.test(process.env.AUTO_EMAIL_UUID)): string {
