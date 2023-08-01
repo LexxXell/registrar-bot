@@ -57,7 +57,8 @@ export async function register(regData: RegData): Promise<PersonRegistrationResu
     await delay(1000);
 
     // TODO: Set calendar добавить пролистывание месяцов
-    await page.click(`td.day[data-date="${Date.parse(regData.date)}"]`, { delay: typeDelay });
+    // await page.click(`td.day[data-date="${Date.parse(regData.date)}"]`, { delay: typeDelay });
+    await setDatepicker(page, new Date(regData.date));
     await delay(1000);
 
     await page.click(gdprSelector, { delay: typeDelay });
@@ -90,6 +91,15 @@ async function setFormularType(page: Page, type: FormularTypes) {
   await page.click(formularSelector);
   await page.type(formularSearchSelector, type, { delay: typeDelay });
   await page.keyboard.press('Enter');
+}
+
+async function setDatepicker(page: Page, date: Date) {
+  await page.evaluate((dateString) => {
+    const datepicker = document.querySelector('#data_programarii > div > div.datepicker-days');
+    if (datepicker) {
+      (datepicker as any).datepicker('setDate', dateString);
+    }
+  }, date.toLocaleDateString('en-US'));
 }
 
 async function clickTransmiteButton(page: Page) {

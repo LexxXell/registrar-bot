@@ -32,7 +32,7 @@ async function register(regData: RegData): Promise<PersonRegistrationResult> {
   const browser: Browser = await puppeteer.launch({ headless: /true/.test(process.env.HEADLESS) ? 'new' : false });
   try {
     const page = await browser.newPage();
-    page.setViewport({ width: 1080, height: 1920 });
+    page.setViewport({ width: 1024, height: 768 });
 
     await page.goto(programmereUrl, { waitUntil: 'networkidle2' });
     await delay(1000);
@@ -59,7 +59,8 @@ async function register(regData: RegData): Promise<PersonRegistrationResult> {
     await delay(1000);
 
     // Set calendar
-    await page.click(`td.day[data-date="${Date.parse(regData.date)}"]`, { delay: typeDelay });
+    // await page.click(`td.day[data-date="${Date.parse(regData.date)}"]`, { delay: typeDelay });
+    await setDatepicker(page, new Date(regData.date));
     await delay(1000);
 
     await page.click(gdprSelector, { delay: typeDelay });
@@ -98,6 +99,23 @@ async function setFormularType(page: Page, type: FormularTypes) {
   await page.keyboard.press('Enter');
 }
 
+// async function setDatepicker(page: Page, date: Date) {
+//   const formattedDate = date.toLocaleDateString('en-US');
+//   const dateScript = `$("#data_programarii > div > div.datepicker-days").datepicker('setDate', '${formattedDate}');`;
+//   await page.evaluate((script: string) => {
+//     eval(script);
+//   }, dateScript);
+// }
+
+async function setDatepicker(page: Page, date: Date) {
+  await page.evaluate((dateString) => {
+    const datepicker = document.querySelector('#data_programarii > div > div.datepicker-days');
+    if (datepicker) {
+      (datepicker as any).datepicker('setDate', dateString);
+    }
+  }, date.toLocaleDateString('en-US'));
+}
+
 async function clickTransmiteButton(page: Page) {
   await page.waitForSelector('#transmite');
   await page.waitForFunction(() => {
@@ -105,7 +123,7 @@ async function clickTransmiteButton(page: Page) {
     return !(button as any).disabled;
   });
   console.log('Button is active');
-  await page.click(transmiteButton);
+  // await page.click(transmiteButton);
 }
 
 if (require.main === module) {
@@ -118,7 +136,7 @@ if (require.main === module) {
     prenume_tata: 'Brus',
     email: 'brandon1965lee2@gmail.com',
     numar_pasaport: '123456781',
-    tip_formular: FormularTypes.ART11_BUCURESTI,
-    date: '2023-08-08',
+    tip_formular: FormularTypes.ART11_SUCEAVA,
+    date: '2023-11-01',
   }).then((res) => console.log(res));
 }
