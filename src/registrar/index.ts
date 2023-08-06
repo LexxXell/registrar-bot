@@ -64,7 +64,8 @@ export async function register(regData: RegData): Promise<PersonRegistrationResu
     await page.click(gdprSelector, { delay: typeDelay });
     await delay(1000);
 
-    await clickTransmiteButton(page);
+    // await clickTransmiteButton(page);
+    console.log('Click button');
     await delay(1000);
 
     await page.waitForSelector(ticketNumberSelector, { timeout: 15000 });
@@ -95,10 +96,7 @@ async function setFormularType(page: Page, type: FormularTypes) {
 
 async function setDatepicker(page: Page, date: Date) {
   await page.evaluate((dateString) => {
-    const datepicker = document.querySelector('#data_programarii > div > div.datepicker-days');
-    if (datepicker) {
-      (datepicker as any).datepicker('setDate', dateString);
-    }
+    ($('#data_programarii > div > div.datepicker-days') as any).datepicker('setDate', dateString);
   }, date.toLocaleDateString('en-US'));
 }
 
