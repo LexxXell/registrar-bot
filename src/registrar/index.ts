@@ -64,8 +64,7 @@ export async function register(regData: RegData): Promise<PersonRegistrationResu
     await page.click(gdprSelector, { delay: typeDelay });
     await delay(1000);
 
-    // await clickTransmiteButton(page);
-    console.log('Click button');
+    await clickTransmiteButton(page);
     await delay(1000);
 
     await page.waitForSelector(ticketNumberSelector, { timeout: 15000 });
