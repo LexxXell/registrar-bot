@@ -96,6 +96,7 @@ async function setFormularType(page: Page, type: FormularTypes) {
 async function setDatepicker(page: Page, date: Date) {
   await page.evaluate((dateString) => {
     ($('#data_programarii > div > div.datepicker-days') as any).datepicker('setDate', dateString);
+    $('#data_programarii > div > div.datepicker-days').css('display', 'none');
   }, date.toLocaleDateString('en-US'));
 }
 
