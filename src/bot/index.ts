@@ -8,6 +8,8 @@ import { startComposer } from './composers/start.composer';
 import { idGuard } from './middlewares/id-guard.middleware';
 import { reglistComposer } from './composers/reglist.composer';
 import { sendErrorToAdmin } from '../helpers/sendErrorToAdmin.helper';
+import { propDateAwating, propDateEnv } from '../helpers/constants.helper';
+import { setPrioritizeRegExp } from './helpers/constants.helper';
 
 const logger = new Logger('Registrar Bot');
 
@@ -24,6 +26,15 @@ bot.i18n = new TelegrafI18n({
 
 bot.use(bot.i18n);
 bot.use(idGuard);
+
+bot.hears(setPrioritizeRegExp, (ctx, next) => {
+  if (!parseInt(process.env[propDateAwating] || '0')) {
+    return next();
+  }
+  const { index } = setPrioritizeRegExp.exec(ctx.message.text).groups;
+  process.env[propDateEnv] = (parseInt(index) - 1).toString();
+  ctx.replyWithHTML(ctx.i18n.t('prioritize_set'));
+});
 
 bot.use(startComposer);
 bot.use(reglistComposer);

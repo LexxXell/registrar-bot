@@ -8,6 +8,9 @@ export const regCooldown: number = Number(process.env.REG_COOLDOWN_MS) || 360000
 export const formularType: keyof typeof FormularTypes =
   (process.env.FORMULAR_TYPE as keyof typeof FormularTypes) || 'ART8_81__10_27';
 
+export const propDateEnv = 'PROP_DATE_ENV';
+export const propDateAwating = 'PROP_DATE_ENV_AWATING';
+
 export const messageRecipients = [...new Set([process.env.BOT_OWNER_ID, process.env.BOT_ADMIN_ID])];
 
 export const addPersonRegExp: RegExp = /^\/addperson\n(?<rawPerson>(?:.|\n)+)/im;

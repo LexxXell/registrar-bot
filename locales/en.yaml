@@ -91,4 +91,9 @@ registration_is_open: |
   ⬇️ <i>(date - places)</i>
   ${strDateQuotas}
 
-  ❗️ <b>The registration process from RegList is started.</b>
+  <b>Click on the date you want to prioritize.</b>
+  <i>Waiting 1 min</i>
+  ❗️ <b>After the registration process by table is started.</b>
+
+prioritize_set: |
+  ✅ Priority set

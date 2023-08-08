@@ -1,4 +1,4 @@
-import { formularType } from './helpers/constants.helper';
+import { formularType, propDateAwating, propDateEnv } from './helpers/constants.helper';
 import { DateQuotas } from './quotasChecker/@types/date-quotas.type';
 import { getDateQuotas } from './quotasChecker';
 import { register } from './registrar';
@@ -9,8 +9,25 @@ import { sendRegistrationDetails } from './bot/helpers/send-registration-details
 import { sendErrorToAdmin } from './helpers/sendErrorToAdmin.helper';
 import { PersonModel } from './models/person.model';
 import { FormularTypes } from './registrar/@types';
+import { delay } from './helpers/delay.helper';
 
 const logger = new Logger('RegLoop');
+
+async function waitForProposeDate(dateQuotas: Array<DateQuotas>): Promise<DateQuotas> {
+  process.env[propDateAwating] = '1';
+  const initialValue = parseInt(process.env[propDateEnv] || '0');
+  let currentValue = parseInt(process.env[propDateEnv] || '0');
+  const waitTime = parseInt(process.env.PROP_DATE_ENV_WAIT_TIME || '60');
+  for (let elapsedSeconds = 0; elapsedSeconds < waitTime; elapsedSeconds++) {
+    await delay(1000);
+    currentValue = parseInt(process.env[propDateEnv] || '0');
+    if (currentValue !== initialValue) {
+      break;
+    }
+  }
+  process.env[propDateAwating] = '0';
+  return dateQuotas[currentValue >= 0 && currentValue < dateQuotas.length ? currentValue : 0];
+}
 
 export async function regLoop() {
   logger.log('New Reg loop');
@@ -24,8 +41,15 @@ export async function regLoop() {
   const dateQuotas: Array<DateQuotas> = await getDateQuotas(formularType);
   if (dateQuotas.length) {
     logger.log('Quotas available');
+    await informOnQuotas(dateQuotas);
+    const propDateQoutas = await waitForProposeDate(dateQuotas);
+    const index = dateQuotas.findIndex((item) => item.date === propDateQoutas.date);
+    if (index !== -1 && index !== 0) {
+      const [item] = dateQuotas.splice(index, 1);
+      dateQuotas.unshift(item);
+    }
     logger.log('Start registration process');
-    informOnQuotas(dateQuotas);
+    return;
     dateQuotaLoop: for (let dateQuota of dateQuotas) {
       const date = dateQuota.date;
       let quota = dateQuota.quotas;
