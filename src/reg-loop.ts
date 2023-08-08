@@ -49,7 +49,6 @@ export async function regLoop() {
       dateQuotas.unshift(item);
     }
     logger.log('Start registration process');
-    return;
     dateQuotaLoop: for (let dateQuota of dateQuotas) {
       const date = dateQuota.date;
       let quota = dateQuota.quotas;
