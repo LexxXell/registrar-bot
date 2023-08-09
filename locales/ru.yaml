@@ -8,6 +8,7 @@ help: |
   <code>/addPerson + [data]</code> - добавить персону для регистрации (см. /help_addpersone)
   <code>/delPerson email</code> - удалить персону с этим email
   /listPersons - вывести список персон для регистрации
+  /startRegistration - запустить регистрацию вручную
 
   /help - справка
 
@@ -96,3 +97,9 @@ registration_is_open: |
 
 prioritize_set: |
   ✅ Приоритет установлен
+
+start_reg_loop: |
+  ✅ Регистрация успешно запущена
+
+start_reg_loop_error: |
+  ⛔️ Процесс регистрации уже запущен

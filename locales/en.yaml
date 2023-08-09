@@ -8,6 +8,7 @@ help: |
   <code>/addPerson + [data]</code> - add persone for registration (more /help_addpersone)
   <code>/delPerson email</code> - delete the person with this email address
   /listPersons - show persons reg list
+  /startRegistration - start registration manually
 
   /help - see help
 
@@ -97,3 +98,9 @@ registration_is_open: |
 
 prioritize_set: |
   ✅ Priority set
+
+start_reg_loop: |
+  ✅ Registration started successfully
+
+start_reg_loop_error: |
+  ⛔️ The registration process is already running

@@ -1,7 +1,5 @@
 import { Composer } from 'telegraf';
 import { Context } from '../@types';
-import { existsSync } from 'node:fs';
-import path from 'node:path';
 import { PersonModel } from '../../models/person.model';
 
 export const startComposer: Composer<Context> = new Composer();

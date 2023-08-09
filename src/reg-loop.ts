@@ -1,4 +1,4 @@
-import { formularType, propDateAwating, propDateEnv } from './helpers/constants.helper';
+import { formularType, propDateAwating, propDateEnv, regLoopAwaiting } from './helpers/constants.helper';
 import { DateQuotas } from './quotasChecker/@types/date-quotas.type';
 import { getDateQuotas } from './quotasChecker';
 import { register } from './registrar';
@@ -30,6 +30,10 @@ async function waitForProposeDate(dateQuotas: Array<DateQuotas>): Promise<DateQu
 }
 
 export async function regLoop() {
+  if (!/true/.test(process.env[regLoopAwaiting])) {
+    return;
+  }
+  process.env[regLoopAwaiting] = 'false';
   logger.log('New Reg loop');
   const persons = await PersonModel.find({ registration_number: { $eq: null }, error: { $eq: false } });
   if (!persons.length) {
@@ -97,5 +101,6 @@ export async function regLoop() {
     }
 
     logger.log('Finish registration process');
+    process.env[regLoopAwaiting] = 'true';
   }
 }

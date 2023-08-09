@@ -11,6 +11,11 @@ export const formularType: keyof typeof FormularTypes =
 export const propDateEnv = 'PROP_DATE_ENV';
 export const propDateAwating = 'PROP_DATE_ENV_AWATING';
 
+export const regLoopAwaiting = 'REG_LOOP_AWAITING';
+if (!process.env[regLoopAwaiting]) {
+  process.env[regLoopAwaiting] = 'true';
+}
+
 export const messageRecipients = [...new Set([process.env.BOT_OWNER_ID, process.env.BOT_ADMIN_ID])];
 
 export const addPersonRegExp: RegExp = /^\/addperson\n(?<rawPerson>(?:.|\n)+)/im;
