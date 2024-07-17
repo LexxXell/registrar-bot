@@ -64,8 +64,12 @@ export async function register(regData: RegData): Promise<PersonRegistrationResu
     await page.click(gdprSelector, { delay: typeDelay });
     await delay(1000);
 
+    page.screenshot({ path: `reg_media/${regData.email}_0.png` });
+
     await clickTransmiteButton(page);
     await delay(1000);
+
+    page.screenshot({ path: `reg_media/${regData.email}_1.png` });
 
     await page.waitForSelector(ticketNumberSelector, { timeout: 15000 });
     const ticket_number = await page.$eval(ticketNumberSelector, (el) => el.innerHTML);
