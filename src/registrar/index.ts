@@ -27,7 +27,12 @@ const logger = new Logger('Registrar');
 const typeDelay = 100;
 
 export async function register(regData: RegData): Promise<PersonRegistrationResult> {
-  const browser: Browser = await puppeteer.launch({ headless: /true/.test(process.env.HEADLESS) ? 'new' : false });
+  //const browser: Browser = await puppeteer.launch({ headless: /true/.test(process.env.HEADLESS) ? 'new' : false });
+  const browser: Browser = await puppeteer.launch({
+    headless: /true/.test(process.env.HEADLESS) ? 'new' : false,
+    ignoreHTTPSErrors: true,
+  });
+
   try {
     const page = await browser.newPage();
     page.setViewport({ width: 1080, height: 1920 });
